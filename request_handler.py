@@ -1,13 +1,14 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_animals, get_single_animal
-
+from views import get_all_animals, get_single_animal, create_animal, delete_animal, get_all_locations, get_single_location, create_location, delete_location, get_all_employees, get_single_employee, create_employee, delete_employee, get_single_customer, get_all_customers, create_customer, delete_customer
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
 # work together for a common purpose. In this case, that
 # common purpose is to respond to HTTP requests from a client.
+
+
 class HandleRequests(BaseHTTPRequestHandler):
 
     def parse_url(self, path):
@@ -53,50 +54,108 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 response = get_all_animals()
 
-        self.wfile.write(json.dumps(response).encode())
+        elif resource == "locations":
+            if id is not None:
+                response = get_single_location(id)
 
-    # def do_GET(self):
-    #     """Handles GET requests to the server
-    #     """
-    #     # Set the response code to 'Ok'
-    #     self._set_headers(200)
+            else:
+                response = get_all_locations()
 
-    #     # Your new console.log() that outputs to the terminal
-    #     print(self.path)
+        elif resource == "locations":
+            if id is not None:
+                response = get_single_location(id)
 
-    #     if self.path == "/animals/1":
-    #         response = get_all_animals()
-    #     else:
-    #         response = []
+            else:
+                response = get_all_locations()
 
-        # # It's an if..else statement
-        # if self.path == "/animals":
-        #     # In Python, this is a list of dictionaries
-        #     # In JavaScript, you would call it an array of objects
-        #     response = [
-        #         {"id": 1, "name": "Snickers", "species": "Dog"},
-        #         {"id": 2, "name": "Lenny", "species": "Cat"}
-        #     ]
+        elif resource == "employees":
+            if id is not None:
+                response = get_single_employee(id)
 
-        # else:
-        #     response = []
+            else:
+                response = get_all_employees()
 
+        elif resource == "customers":
+            if id is not None:
+                response = get_single_customer(id)
 
-        # Send a JSON formatted string as a response
+            else:
+                response = get_all_customers()
+
         self.wfile.write(json.dumps(response).encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
+    # def do_POST(self):
+    #     """Handles POST requests to the server"""
+
+    #     # Set response code to 'Created'
+    #     self._set_headers(201)
+
+    #     content_len = int(self.headers.get('content-length', 0))
+    #     post_body = self.rfile.read(content_len)
+    #     response = {"payload": post_body}
+    #     self.wfile.write(json.dumps(response).encode())
+
     def do_POST(self):
-        """Handles POST requests to the server"""
-
-        # Set response code to 'Created'
         self._set_headers(201)
-
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        response = {"payload": post_body}
-        self.wfile.write(json.dumps(response).encode())
+
+        # Convert JSON string to a Python dictionary
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Initialize new animal
+        new_response = None
+        # new_location = None
+        # new_employee = None
+
+        # Add a new animal to the list. Don't worry about
+        # the orange squiggle, you'll define the create_animal
+        # function next.
+        if resource == "animals":
+            new_response = create_animal(post_body)
+
+        # # Add a new location to the list. Don't worry about
+        # # the orange squiggle, you'll define the create_location
+        # # function next.
+        elif resource == "locations":
+            new_response = create_location(post_body)
+
+        elif resource == "employees":
+            new_response = create_employee(post_body)
+
+        elif resource == "customers":
+            new_response = create_customer(post_body)
+
+        # Encode the new animal and send in response
+        self.wfile.write(json.dumps(new_response).encode())
+
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            delete_animal(id)
+
+        elif resource == "customers":
+            delete_customer(id)
+
+        elif resource == "employees":
+            delete_employee(id)
+        
+        elif resource == "locations":
+            delete_location(id)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
     # A method that handles any PUT request.
     def do_PUT(self):
