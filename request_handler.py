@@ -9,7 +9,6 @@ from views import *
 
 
 class HandleRequests(BaseHTTPRequestHandler):
-
     # Here's a class function
     def parse_url(self, path):
         # Just like splitting a string in JavaScript. If the
@@ -19,7 +18,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         path_params = path.split("/")
         resource = path_params[1]
         id = None
-
         # Try to get the item at index 2
         try:
             # Convert the string "1" to the integer 1
@@ -35,6 +33,7 @@ class HandleRequests(BaseHTTPRequestHandler):
     # It handles any GET request.
 
     def do_GET(self):
+
         self._set_headers(200)
         response = {}  # Default response
 
@@ -44,14 +43,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "animals":
             if id is not None:
                 response = get_single_animal(id)
+                
+                if response is None: 
+                    response = "This animal is not home"
             else:
                 response = get_all_animals()
-
-        elif resource == "locations":
-            if id is not None:
-                response = get_single_location(id)
-            else:
-                response = get_all_locations()
 
         elif resource == "locations":
             if id is not None:
@@ -71,9 +67,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 response = get_all_customers()
 
-        else:
-            self._set_headers(404)
-            response = ""
+        # else:
+        #     if id is not None: 
+        #         self._set_headers(404)
+        #         response = "HI"
 
         self.wfile.write(json.dumps(response).encode())
 

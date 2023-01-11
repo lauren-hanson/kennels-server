@@ -55,10 +55,13 @@ def get_single_animal(id):
 
             animal_customer = get_single_customer(
                 requested_animal['customerId'])
+
             requested_animal['customer'] = animal_customer
             # for location in ANIMALS:
         #     if requested_animal["locationId"] == location["id"]:
         #         requested_animal['location'] = get_single_location
+            # pop is removing the 2 keys 
+            # how can both be deleted?
             requested_animal.pop('locationId')
             requested_animal.pop('customerId')
         # requested_animal['location'] = get_single_location

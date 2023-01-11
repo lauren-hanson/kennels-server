@@ -1,7 +1,22 @@
 CUSTOMERS = [
     {
         "id": 1,
-        "name": "Ryan Tanay",
+        "name": "Ryan",
+        "status": "ready"
+    },
+    {
+        "id": 2,
+        "name": "Brayden",
+        "status": "ready"
+    },
+    {
+        "id": 3,
+        "name": "Rachel",
+        "status": "ready"
+    },
+    {
+        "id": 4,
+        "name": "Maisie",
         "status": "ready"
     }
 ]
@@ -27,6 +42,7 @@ def get_single_customer(id):
 
     return requested_customer
 
+
 def create_customer(customer):
     # Get the id value of the last customer in the list
     max_id = CUSTOMERS[-1]["id"]
@@ -43,6 +59,7 @@ def create_customer(customer):
     # Return the dictionary with `id` property added
     return customer
 
+
 def delete_customer(id):
     # Initial -1 value for customer index, in case one isn't found
     customer_index = -1
@@ -58,6 +75,7 @@ def delete_customer(id):
     if customer_index >= 0:
         CUSTOMERS.pop(customer_index)
 
+
 def update_customer(id, new_customer):
     # Iterate the CUSTOMERS list, but use enumerate() so that
     # you can access the index value of each item.
@@ -66,4 +84,3 @@ def update_customer(id, new_customer):
             # Found the customer. Update the value.
             CUSTOMERS[index] = new_customer
             break
-
