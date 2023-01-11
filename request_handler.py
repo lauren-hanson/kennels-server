@@ -1,7 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal, get_all_locations, get_single_location, create_location, delete_location, update_location, get_all_employees, get_single_employee, create_employee, delete_employee, update_employee, get_single_customer, get_all_customers, create_customer, delete_customer, update_customer
+from views import *
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -11,6 +10,7 @@ from views import get_all_animals, get_single_animal, create_animal, delete_anim
 
 class HandleRequests(BaseHTTPRequestHandler):
 
+    # Here's a class function
     def parse_url(self, path):
         # Just like splitting a string in JavaScript. If the
         # path is "/animals/1", the resulting list will
@@ -31,15 +31,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             pass  # Request had trailing slash: /animals/
 
         return (resource, id)  # This is a tuple
-    # This is a Docstring it should be at the beginning of all classes and functions
-    # It gives a description of the class or function
-    """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
-    """
-
-    # Here's a class function
-
     # Here's a method on the class that overrides the parent's method.
     # It handles any GET request.
+
     def do_GET(self):
         self._set_headers(200)
         response = {}  # Default response
@@ -77,6 +71,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 response = get_all_customers()
 
+        else:
+            self._set_headers(404)
+            response = ""
+
         self.wfile.write(json.dumps(response).encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -103,7 +101,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Initialize new animal
+        # Initialize new response
         new_response = None
         # new_location = None
         # new_employee = None
@@ -145,20 +143,18 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         elif resource == "employees":
             delete_employee(id)
-        
+
         elif resource == "locations":
             delete_location(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
 
-
-
     # A method that handles any PUT request.
+
     def do_PUT(self):
         """Handles PUT requests to the server"""
         self.do_PUT()
-
 
     def do_PUT(self):
         self._set_headers(204)
@@ -173,19 +169,20 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "animals":
             update_animal(id, post_body)
 
-        if resource == "customers":
+        elif resource == "customers":
             update_customer(id, post_body)
-        
-        if resource == "employees":
+
+        elif resource == "employees":
             update_employee(id, post_body)
-            
-        if resource == "locations":
+
+        elif resource == "locations":
             update_location(id, post_body)
 
     # Encode the new animal and send in response
         self.wfile.write("".encode())
 
-
+    # setting metadata
+    # can set status=200 and remove 200 from do_GET method
     def _set_headers(self, status):
         # Notice this Docstring also includes information about the arguments passed to the function
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
@@ -195,6 +192,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             status (number): the status code to return to the front end
         """
         self.send_response(status)
+        # if "plain/text" added after content-type, there will be no formatting after the comma will format the information
+        # API can support multiple formatting
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()

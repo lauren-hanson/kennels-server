@@ -1,3 +1,6 @@
+from .location_requests import get_single_location
+from .customer_requests import get_single_customer
+
 ANIMALS = [
     {
         "id": 1,
@@ -25,10 +28,13 @@ ANIMALS = [
     }
 ]
 
+
 def get_all_animals():
     return ANIMALS
 
     # Function with a single parameter
+
+
 def get_single_animal(id):
     # Variable to hold the found animal, if it exists
     requested_animal = None
@@ -41,6 +47,21 @@ def get_single_animal(id):
         if animal["id"] == id:
             requested_animal = animal
 
+            # storing single location function & connecting locationId = location.id
+            animal_location = get_single_location(
+                requested_animal['locationId'])
+            # this will add key to the response
+            requested_animal['location'] = animal_location
+
+            animal_customer = get_single_customer(
+                requested_animal['customerId'])
+            requested_animal['customer'] = animal_customer
+            # for location in ANIMALS:
+        #     if requested_animal["locationId"] == location["id"]:
+        #         requested_animal['location'] = get_single_location
+            requested_animal.pop('locationId')
+            requested_animal.pop('customerId')
+        # requested_animal['location'] = get_single_location
     return requested_animal
 
 

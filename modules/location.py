@@ -4,4 +4,5 @@ class Location():
         self.id = id
         self.address = address
         self.name = name
-        self.location_id = location_id
+        
+

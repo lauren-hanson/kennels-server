@@ -1,4 +1,4 @@
-echo '[FORMAT]
+'[FORMAT]
 good-names=i,
     j,
     ex,
@@ -11,5 +11,4 @@ good-names=i,
     do_DELETE
 
 [MESSAGES CONTROL]
-disable=broad-except,redefined-builtin,missing-module-docstring
-' > .pylintrc
+disable=broad-except,redefined-builtin,missing-module-docstring'
