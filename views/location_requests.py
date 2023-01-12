@@ -8,6 +8,16 @@ LOCATIONS = [
         "id": 2,
         "name": "Nashville South",
         "address": "209 Emory Drive"
+    },
+    {
+        "id": 3,
+        "name": "Nashville East",
+        "address": "1800 Ordway Place"
+    },
+    {
+        "id": 4,
+        "name": "Nashville West",
+        "address": "13 Neese Avenue"
     }
 ]
 
@@ -15,6 +25,8 @@ def get_all_locations():
     return LOCATIONS
 
     # Function with a single parameter
+
+
 def get_single_location(id):
     # Variable to hold the found location, if it exists
     requested_location = None
@@ -28,6 +40,7 @@ def get_single_location(id):
             requested_location = location
 
     return requested_location
+
 
 def create_location(location):
     # Get the id value of the last location in the list
@@ -44,6 +57,7 @@ def create_location(location):
 
     # Return the dictionary with `id` property added
     return location
+
 
 def delete_location(id):
     # Initial -1 value for location index, in case one isn't found
