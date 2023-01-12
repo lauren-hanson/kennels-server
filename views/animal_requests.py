@@ -48,14 +48,11 @@ def get_single_animal(id):
             requested_animal = animal
 
             # storing single location function & connecting locationId = location.id
-            animal_location = get_single_location(
-                requested_animal['locationId'])
+            animal_location = get_single_location(requested_animal['locationId'])
             # this will add key to the response
             requested_animal['location'] = animal_location
 
-            animal_customer = get_single_customer(
-                requested_animal['customerId'])
-
+            animal_customer = get_single_customer(requested_animal['customerId'])
             requested_animal['customer'] = animal_customer
             # for location in ANIMALS:
         #     if requested_animal["locationId"] == location["id"]:

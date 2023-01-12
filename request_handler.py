@@ -33,8 +33,6 @@ class HandleRequests(BaseHTTPRequestHandler):
     # It handles any GET request.
 
     def do_GET(self):
-
-        self._set_headers(200)
         response = {}  # Default response
 
         # Parse the URL and capture the tuple that is returned
@@ -42,30 +40,41 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "animals":
             if id is not None:
+                # self._set_headers(200)
                 response = get_single_animal(id)
 
                 if response is None:
                     self._set_headers(404)
                     response = "This animal is not home"
+                else:
+                    self._set_headers(200)
+                    
             else:
+                self._set_headers(200)
                 response = get_all_animals()
 
         elif resource == "locations":
             if id is not None:
+                self._set_headers(200)
                 response = get_single_location(id)
             else:
+                self._set_headers(200)
                 response = get_all_locations()
 
         elif resource == "employees":
             if id is not None:
+                self._set_headers(200)
                 response = get_single_employee(id)
             else:
+                self._set_headers(200)
                 response = get_all_employees()
 
         elif resource == "customers":
             if id is not None:
+                self._set_headers(200)
                 response = get_single_customer(id)
             else:
+                self._set_headers(200)
                 response = get_all_customers()
 
         # else:
