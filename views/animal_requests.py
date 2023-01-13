@@ -15,7 +15,6 @@ ANIMALS = [
     }
 ]
 
-
 # def get_all_animals():
 #     return ANIMALS
 # Function with a single parameter
@@ -92,38 +91,6 @@ def get_single_animal(id):
         return animal.__dict__
 
 
-"""
-def get_single_animal(id):
-    # Variable to hold the found animal, if it exists
-    requested_animal=None
-
-    # Iterate the ANIMALS list above. Very similar to the
-    # for..of loops you used in JavaScript.
-    for animal in ANIMALS:
-        # Dictionaries in Python use [] notation to find a key
-        # instead of the dot notation that JavaScript used.
-        if animal["id"] == id:
-            requested_animal=animal
-
-            # storing single location function & connecting locationId = location.id
-            animal_location=get_single_location(
-                requested_animal['locationId'])
-            # this will add key to the response
-            requested_animal['location']=animal_location
-
-            animal_customer=get_single_customer(
-                requested_animal['customerId'])
-            requested_animal['customer']=animal_customer
-            # for location in ANIMALS:
-        #     if requested_animal["locationId"] == location["id"]:
-        #         requested_animal['location'] = get_single_location
-            # pop is removing the 2 keys
-            # how can both be deleted?
-            requested_animal.pop('locationId')
-            requested_animal.pop('customerId')
-        # requested_animal['location'] = get_single_location
-    return requested_animal
-"""
 
 
 def get_animal_by_status(status):
@@ -185,6 +152,14 @@ def get_animal_by_location(location_id):
 
     return animals
 
+def delete_animal(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM animal
+        WHERE id = ?
+        """, (id, ))
 
 def create_animal(animal):
     # Get the id value of the last animal in the list
@@ -203,6 +178,48 @@ def create_animal(animal):
     return animal
 
 
+def update_animal(id, new_animal):
+    # Iterate the ANIMALS list, but use enumerate() so that
+    # you can access the index value of each item.
+    for index, animal in enumerate(ANIMALS):
+        if animal["id"] == id:
+            # Found the animal. Update the value.
+            ANIMALS[index] = new_animal
+            break
+
+"""
+def get_single_animal(id):
+    # Variable to hold the found animal, if it exists
+    requested_animal=None
+
+    # Iterate the ANIMALS list above. Very similar to the
+    # for..of loops you used in JavaScript.
+    for animal in ANIMALS:
+        # Dictionaries in Python use [] notation to find a key
+        # instead of the dot notation that JavaScript used.
+        if animal["id"] == id:
+            requested_animal=animal
+
+            # storing single location function & connecting locationId = location.id
+            animal_location=get_single_location(
+                requested_animal['locationId'])
+            # this will add key to the response
+            requested_animal['location']=animal_location
+
+            animal_customer=get_single_customer(
+                requested_animal['customerId'])
+            requested_animal['customer']=animal_customer
+            # for location in ANIMALS:
+        #     if requested_animal["locationId"] == location["id"]:
+        #         requested_animal['location'] = get_single_location
+            # pop is removing the 2 keys
+            # how can both be deleted?
+            requested_animal.pop('locationId')
+            requested_animal.pop('customerId')
+        # requested_animal['location'] = get_single_location
+    return requested_animal
+"""
+"""
 def delete_animal(id):
     # Initial -1 value for animal index, in case one isn't found
     animal_index = -1
@@ -217,13 +234,4 @@ def delete_animal(id):
     # If the animal was found, use pop(int) to remove it from list
     if animal_index >= 0:
         ANIMALS.pop(animal_index)
-
-
-def update_animal(id, new_animal):
-    # Iterate the ANIMALS list, but use enumerate() so that
-    # you can access the index value of each item.
-    for index, animal in enumerate(ANIMALS):
-        if animal["id"] == id:
-            # Found the animal. Update the value.
-            ANIMALS[index] = new_animal
-            break
+"""
