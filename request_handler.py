@@ -73,11 +73,17 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_customers()}"
 
-            if resource == "animals":
+            elif resource == "animals":
                 if id is not None:
                     response = f"{get_single_animal(id)}"
                 else:
                     response = f"{get_all_animals()}"
+
+            elif resource == "employees":
+                if id is not None:
+                    response = f"{get_single_employee(id)}"
+                else:
+                    response = f"{get_all_employees()}"
 
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
@@ -91,6 +97,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             elif query.get('location_id') and resource == 'animals':
                 response = get_animal_by_location(query['location_id'][0])
+
+            elif query.get('location_id') and resource == 'employees':
+                response = get_employee_by_location(query['location_id'][0])
 
         self.wfile.write(json.dumps(response).encode())
 
