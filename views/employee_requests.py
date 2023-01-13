@@ -1,3 +1,7 @@
+import sqlite3
+import json
+from models import Employee
+
 EMPLOYEES = [
     {
         "id": 1,
@@ -5,10 +9,65 @@ EMPLOYEES = [
     }
 ]
 
-def get_all_employees():
-    return EMPLOYEES
 
-    # Function with a single parameter
+def get_all_employees():
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT 
+            a.id,
+            a.name, 
+            a.address,
+            a.location_id
+        FROM employee a
+        """)
+
+        employees = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(row['id'], row['name'],
+                                row['address'], row['location_id'])
+
+            employees.append(employee.__dict__)
+    return employees
+
+
+def get_single_employee(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT 
+            a.id,
+            a.name, 
+            a.address,
+            a.location_id
+        FROM employee a
+        WHERE a.id = ?
+        """, (id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an employee instance from the current row
+        employee = Employee(data['id'], data['name'],
+                            data['address'], data['location_id'])
+
+        return employee.__dict__
+
+
+"""def get_all_employees():
+    return EMPLOYEES"""
+
+# Function with a single parameter
+"""    
 def get_single_employee(id):
     # Variable to hold the found employee, if it exists
     requested_employee = None
@@ -22,6 +81,7 @@ def get_single_employee(id):
             requested_employee = employee
 
     return requested_employee
+"""
 
 
 def create_employee(employee):
@@ -40,6 +100,7 @@ def create_employee(employee):
     # Return the dictionary with `id` property added
     return employee
 
+
 def delete_employee(id):
     # Initial -1 value for employee index, in case one isn't found
     employee_index = -1
@@ -54,6 +115,7 @@ def delete_employee(id):
     # If the employee was found, use pop(int) to remove it from list
     if employee_index >= 0:
         EMPLOYEES.pop(employee_index)
+
 
 def update_employee(id, new_employee):
     # Iterate the EMPLOYEES list, but use enumerate() so that
