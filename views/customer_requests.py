@@ -37,8 +37,10 @@ def get_all_customers():
         db_cursor.execute("""
         SELECT
             a.id,
-            a.name, 
-            a.status
+            a.name,
+            a.address,
+            a.email, 
+            a.password
         FROM customer a
         """)
 
@@ -55,12 +57,38 @@ def get_all_customers():
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
             # Customer class above.
-            customer = Customer(row['id'], row['name'], row['status'])
+            customer = Customer(row['id'], row['name'], row['address'], row['email'], row['password'])
 
             customers.append(customer.__dict__)
 
     return customers
 
+
+def get_single_customer(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.email, 
+            a.password
+        FROM customer a
+        WHERE a.id = ?
+        """, ( id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an customer instance from the current row
+        customer = Customer(data['id'], data['name'], data['address'], data['email'], data['password'])
+
+        return customer.__dict__
 
 """
 def get_all_customers():
@@ -68,7 +96,7 @@ def get_all_customers():
 """
     # Function with a single parameter
 
-
+"""
 def get_single_customer(id):
     # Variable to hold the found customer, if it exists
     requested_customer = None
@@ -82,7 +110,7 @@ def get_single_customer(id):
             requested_customer = customer
 
     return requested_customer
-
+"""
 
 def create_customer(customer):
     # Get the id value of the last customer in the list
