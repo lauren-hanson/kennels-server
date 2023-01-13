@@ -89,6 +89,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif query.get('status') and resource == 'animals':
                 response = get_animal_by_status(query['status'][0])
 
+            elif query.get('location_id') and resource == 'animals':
+                response = get_animal_by_location(query['location_id'][0])
+
         self.wfile.write(json.dumps(response).encode())
 
     """
