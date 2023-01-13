@@ -1,3 +1,7 @@
+import sqlite3
+import json
+from models import Customer
+
 CUSTOMERS = [
     {
         "id": 1,
@@ -20,7 +24,6 @@ CUSTOMERS = [
         "status": "ready"
     }
 ]
-
 
 def get_all_customers():
     return CUSTOMERS
