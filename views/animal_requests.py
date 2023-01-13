@@ -7,27 +7,11 @@ from .customer_requests import get_single_customer
 ANIMALS = [
     {
         "id": 1,
-        "name": "Snickers",
-        "species": "Dog",
-        "locationId": 1,
-        "customerId": 4,
-        "status": "Admitted"
-    },
-    {
-        "id": 2,
-        "name": "Roman",
-        "species": "Dog",
-        "locationId": 1,
-        "customerId": 2,
-        "status": "Admitted"
-    },
-    {
-        "id": 3,
-        "name": "Blue",
-        "species": "Cat",
-        "locationId": 2,
-        "customerId": 1,
-        "status": "Admitted"
+        "name": "",
+        "breed": "",
+        "status": "",
+        "location_id": "",
+        "customer_id": ""
     }
 ]
 
@@ -140,6 +124,36 @@ def get_single_animal(id):
         # requested_animal['location'] = get_single_location
     return requested_animal
 """
+
+
+def get_animal_by_status(status):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.status,
+            a.breed,
+            a.customer_id, 
+            a.location_id
+        FROM animal a
+        WHERE a.status = ?
+        """, (status, ))
+
+        animals = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['location_id'],
+                            row['customer_id'])
+            animals.append(animal.__dict__)
+
+    return animals
 
 
 def create_animal(animal):

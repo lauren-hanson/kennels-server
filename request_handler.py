@@ -87,7 +87,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_customer_by_email(query['email'][0])
 
             elif query.get('status') and resource == 'animals':
-                response = get_animal_by_status(query['status'])
+                response = get_animal_by_status(query['status'][0])
 
         self.wfile.write(json.dumps(response).encode())
 
