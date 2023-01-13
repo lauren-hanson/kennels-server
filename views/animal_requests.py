@@ -1,3 +1,6 @@
+import sqlite3
+import json
+from models import Animal
 from .location_requests import get_single_location
 from .customer_requests import get_single_customer
 
@@ -29,12 +32,82 @@ ANIMALS = [
 ]
 
 
+# def get_all_animals():
+#     return ANIMALS
+# Function with a single parameter
+
 def get_all_animals():
-    return ANIMALS
+    # Open a connection to the database
+    with sqlite3.connect("./kennel.sqlite3") as conn:
 
-    # Function with a single parameter
+        # Just use these. It's a Black Box.
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.breed,
+            a.status,
+            a.location_id,
+            a.customer_id
+        FROM animal a
+        """)
+
+        # Initialize an empty list to hold all animal representations
+        animals = []
+
+        # Convert rows of data into a Python list
+        dataset = db_cursor.fetchall()
+
+        # Iterate list of data returned from database
+        for row in dataset:
+
+            # Create an animal instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Animal class above.
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['location_id'],
+                            row['customer_id'])
+
+            animals.append(animal.__dict__)
+
+    return animals
 
 
+def get_single_animal(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.breed,
+            a.status,
+            a.location_id,
+            a.customer_id
+        FROM animal a
+        WHERE a.id = ?
+        """, ( id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an animal instance from the current row
+        animal = Animal(data['id'], data['name'], data['breed'],
+                            data['status'], data['location_id'],
+                            data['customer_id'])
+
+        return animal.__dict__
+        
+"""
 def get_single_animal(id):
     # Variable to hold the found animal, if it exists
     requested_animal = None
@@ -48,22 +121,24 @@ def get_single_animal(id):
             requested_animal = animal
 
             # storing single location function & connecting locationId = location.id
-            animal_location = get_single_location(requested_animal['locationId'])
+            animal_location = get_single_location(
+                requested_animal['locationId'])
             # this will add key to the response
             requested_animal['location'] = animal_location
 
-            animal_customer = get_single_customer(requested_animal['customerId'])
+            animal_customer = get_single_customer(
+                requested_animal['customerId'])
             requested_animal['customer'] = animal_customer
             # for location in ANIMALS:
         #     if requested_animal["locationId"] == location["id"]:
         #         requested_animal['location'] = get_single_location
-            # pop is removing the 2 keys 
+            # pop is removing the 2 keys
             # how can both be deleted?
             requested_animal.pop('locationId')
             requested_animal.pop('customerId')
         # requested_animal['location'] = get_single_location
     return requested_animal
-
+"""
 
 def create_animal(animal):
     # Get the id value of the last animal in the list
