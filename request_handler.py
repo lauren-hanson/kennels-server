@@ -8,7 +8,6 @@ from views import *
 # work together for a common purpose. In this case, that
 # common purpose is to respond to HTTP requests from a client.
 
-
 class HandleRequests(BaseHTTPRequestHandler):
     # Here's a class function
     # replace the parse_url function in the class
@@ -46,7 +45,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             pass  # No route parameter exists: /animals
         except ValueError:
             pass  # Request had trailing slash: /animals/
-
         return (resource, id)  # This is a tuple
     # Here's a method on the class that overrides the parent's method.
     # It handles any GET request.
@@ -75,6 +73,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_customers()}"
 
+            if resource == "animals":
+                if id is not None:
+                    response = f"{get_single_animal(id)}"
+                else:
+                    response = f"{get_all_animals()}"
+
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
 
@@ -82,30 +86,28 @@ class HandleRequests(BaseHTTPRequestHandler):
             if query.get('email') and resource == 'customers':
                 response = get_customer_by_email(query['email'][0])
 
+            elif query.get('status') and resource == 'animals':
+                response = get_animal_by_status(query['status'])
+
         self.wfile.write(json.dumps(response).encode())
 
     """
     def do_GET(self):
         response = {}  # Default response
-
         # Parse the URL and capture the tuple that is returned
         (resource, id) = self.parse_url(self.path)
-
         if resource == "animals":
             if id is not None:
                 # self._set_headers(200)
                 response = get_single_animal(id)
-
                 if response is None:
                     self._set_headers(404)
                     response = "This animal is not home"
                 else:
                     self._set_headers(200)
-
             else:
                 self._set_headers(200)
                 response = get_all_animals()
-
         elif resource == "locations":
             if id is not None:
                 self._set_headers(200)
@@ -113,7 +115,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 self._set_headers(200)
                 response = get_all_locations()
-
         elif resource == "employees":
             if id is not None:
                 self._set_headers(200)
@@ -121,7 +122,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 self._set_headers(200)
                 response = get_all_employees()
-
         elif resource == "customers":
             if id is not None:
                 self._set_headers(200)
@@ -129,12 +129,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 self._set_headers(200)
                 response = get_all_customers()
-
         # else:
         #     if id is not None:
         #         self._set_headers(404)
         #         response = "HI"
-
         self.wfile.write(json.dumps(response).encode())
 """
     # Here's a method on the class that overrides the parent's method.
@@ -251,7 +249,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Notice this Docstring also includes information about the arguments passed to the function
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
         headers on the response
-
         Args:
             status (number): the status code to return to the front end
         """
