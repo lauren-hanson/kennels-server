@@ -255,6 +255,27 @@ class HandleRequests(BaseHTTPRequestHandler):
     # Encode the new animal and send in response
         self.wfile.write("".encode())
 
+    # handle return boolean value
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "animals":
+            success = update_animal(id, post_body)
+        # rest of the elif's
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
     # setting metadata
     # can set status=200 and remove 200 from do_GET method
     def _set_headers(self, status):

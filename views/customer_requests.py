@@ -40,7 +40,6 @@ def get_all_customers():
 
         # Iterate list of data returned from database
         for row in dataset:
-
             # Create an customer instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
