@@ -23,7 +23,6 @@ CREATE TABLE `Animal` (
 	FOREIGN KEY(`location_id`) REFERENCES `Location`(`id`)
 );
 
-
 CREATE TABLE `Employee` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT NOT NULL,
@@ -35,7 +34,8 @@ CREATE TABLE `Employee` (
 
 INSERT INTO `Location` VALUES (null, 'Nashville North', "64 Washington Heights");
 INSERT INTO `Location` VALUES (null, 'Nashville South', "101 Penn Ave");
-
+INSERT INTO `Location` VALUES (null, 'Nashville East', "1800 Ordway Place");
+INSERT INTO `Location` VALUES (null, 'Nashville West', "13 Neese Avenue");
 
 INSERT INTO `Employee` VALUES (null, "Madi Peper", "35498 Madison Ave", 1);
 INSERT INTO `Employee` VALUES (null, "Kristen Norris", "100 Main St", 1);
@@ -71,52 +71,22 @@ SELECT
 FROM animal a
 WHERE a.id = 1
 
-SELECT
-    a.id,
-	a.address,
-    a.name
-FROM location a
-WHERE a.id = 2
+UPDATE Animal
+SET id = 10
+WHERE id = 38; 
 
-SELECT 
-	a.id,
-	a.name, 
-	a.address,
-	a.location_id
-FROM employee a
-WHERE a.id = 2
+INSERT INTO Animal (name, breed, status, location_id, customer_id) 
+VALUES ("Nigel", "Corgi", "Napping", 2, 3)
+
+DELETE 
+FROM Animal
+WHERE id = 49; 
 
 
-INSERT INTO `Animal` VALUES (null, "Daps", "Kennel", "Boxer", 2, 2);
-
-SELECT
-    a.id,
-    a.name,
-    a.breed,
-    a.status,
-    a.location_id,
-    a.customer_id,
-    l.name location_name,
-    l.address location_address, 
-	c.name customer_name, 
-	c.address customer_address,
-	c.email customer_email,
-	c.password customer_password
-FROM Animal a
-JOIN Location l
-    ON l.id = a.location_id
-JOIN Customer c	
-	ON c.id = a.customer_id
 
 
-SELECT 
-	a.id,
-	a.name, 
-	a.address,
-	a.location_id,
-	l.name location_name,
-    l.address location_address
-FROM employee a
-JOIN Location l
-	ON l.id = a.location_id
+
+
+
+
 

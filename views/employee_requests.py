@@ -19,15 +19,15 @@ def get_all_employees():
 
         db_cursor.execute("""
         SELECT 
-            a.id,
-            a.name, 
-            a.address,
-            a.location_id,
+            e.id,
+            e.name, 
+            e.address,
+            e.location_id,
             l.name location_name,
             l.address location_address
-        FROM employee a
+        FROM employee e
         JOIN Location l
-            ON l.id = a.location_id
+            ON l.id = e.location_id
         """)
 
         employees = []
@@ -58,8 +58,12 @@ def get_single_employee(id):
             a.id,
             a.name, 
             a.address,
-            a.location_id
+            a.location_id, 
+            l.name location_name, 
+            l.address location_address
         FROM employee a
+        JOIN location l 
+            ON l.id = a.location_id
         WHERE a.id = ?
         """, (id, ))
 
@@ -69,6 +73,11 @@ def get_single_employee(id):
         # Create an employee instance from the current row
         employee = Employee(data['id'], data['name'],
                             data['address'], data['location_id'])
+
+        location = Location(data['location_id'], data['location_name'],
+                            data['location_address'])
+
+        employee.location = location.__dict__
 
         return employee.__dict__
 

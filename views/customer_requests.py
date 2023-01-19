@@ -12,7 +12,6 @@ CUSTOMERS = [
     }
 ]
 
-
 def get_all_customers():
     # Open a connection to the database
     with sqlite3.connect("./kennel.sqlite3") as conn:
